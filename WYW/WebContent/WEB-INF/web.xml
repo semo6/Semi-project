@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1">
+	<display-name>WYW</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>StartPage</servlet-name>
+		<servlet-class>controller.loginController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>StartPage</servlet-name>
+		<url-pattern>/loginController.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>MainPage</servlet-name>
+		<servlet-class>controller.mainController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>MainPage</servlet-name>
+		<url-pattern>/mainController.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ManagerPage</servlet-name>
+		<servlet-class>controller.managerpageController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ManagerPage</servlet-name>
+		<url-pattern>/manager.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>StoryPage</servlet-name>
+		<servlet-class>controller.UploadController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>StoryPage</servlet-name>
+		<url-pattern>/UploadController.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>myPage</servlet-name>
+		<servlet-class>controller.mypageController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>myPage</servlet-name>
+		<url-pattern>/mypageController.do</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>SettingPage</servlet-name>
+		<servlet-class>controller.settingController</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SettingPage</servlet-name>
+		<url-pattern>/setting.do</url-pattern>
+	</servlet-mapping>
+
+</web-app>
