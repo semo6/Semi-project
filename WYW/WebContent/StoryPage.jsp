@@ -14,6 +14,7 @@
 			#s0{ float: left; width: 34% }
 			#s1{ float: left; width: 33%; padding: 25px 0px 25px 0px }
 			#s2{ float: left; width: 100%; height: 50px; }
+			#s3{ float: left; width: 100%; height: 600px; }
 			#s4{ padding: 8px 0px 0px 0px; margin-left: 25px; }
 			#s6{ float: left; }
 			#ask1{ 
@@ -36,6 +37,18 @@
 				vertical-align: middle; 
 				text-align-last: center;
 				color: #d3d3d3;
+			}
+			.image_container{
+				position: absolute;
+			}
+			.image_containers{
+				background: black;
+				width: 345px;
+				height: 450px;
+				position: relative;
+				top: 53px; 
+				left: 382px;
+				z-index: 1;
 			}
 		</style>
 	<!-- Scripts -->
@@ -62,6 +75,74 @@
 					op.style.display = 'none';
 					opp.style.display = 'none';
 					h.style.display = '';
+				}
+			}
+			function previewImage(targetObj, View_area) {
+				var preview = document.getElementById(View_area); //div id
+				var ua = window.navigator.userAgent;
+
+			  //ie일때(IE8 이하에서만 작동)
+				if (ua.indexOf("MSIE") > -1) {
+					targetObj.select();
+					try {
+						var src = document.selection.createRange().text; // get file full path(IE9, IE10에서 사용 불가)
+						var ie_preview_error = document.getElementById("ie_preview_error_" + View_area);
+
+
+						if (ie_preview_error) {
+							preview.removeChild(ie_preview_error); //error가 있으면 delete
+						}
+
+						var img = document.getElementById(View_area); //이미지가 뿌려질 곳
+
+						//이미지 로딩, sizingMethod는 div에 맞춰서 사이즈를 자동조절 하는 역할
+						img.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='"+src+"', sizingMethod='scale')";
+					} catch (e) {
+						if (!document.getElementById("ie_preview_error_" + View_area)) {
+							var info = document.createElement("<p>");
+							info.id = "ie_preview_error_" + View_area;
+							info.innerHTML = e.name;
+							preview.insertBefore(info, null);
+						}
+					}
+			  //ie가 아닐때(크롬, 사파리, FF)
+				} else {
+					var files = targetObj.files;
+					for ( var i = 0; i < files.length; i++) {
+						var file = files[i];
+						var imageType = /image.*/; //이미지 파일일경우만.. 뿌려준다.
+						if (!file.type.match(imageType))
+							continue;
+						var prevImg = document.getElementById("prev_" + View_area); //이전에 미리보기가 있다면 삭제
+						if (prevImg) {
+							preview.removeChild(prevImg);
+						}
+						var img = document.createElement("img"); 
+						img.id = "prev_" + View_area;
+						img.classList.add("obj");
+						img.file = file;
+						img.style.width = '345px'; 
+						img.style.height = '450px';
+						preview.appendChild(img);
+						if (window.FileReader) { // FireFox, Chrome, Opera 확인.
+							var reader = new FileReader();
+							reader.onloadend = (function(aImg) {
+								return function(e) {
+									aImg.src = e.target.result;
+								};
+							})(img);
+							reader.readAsDataURL(file);
+						} else { // safari is not supported FileReader
+							//alert('not supported FileReader');
+							if (!document.getElementById("sfr_preview_error_"
+									+ View_area)) {
+								var info = document.createElement("p");
+								info.id = "sfr_preview_error_" + View_area;
+								info.innerHTML = "not supported FileReader";
+								preview.insertBefore(info, null);
+							}
+						}
+					}
 				}
 			}
 		</script>
@@ -93,13 +174,13 @@
 				<!-- Main -->
 					<section>
 							<div style="position: absolute;">
-								<div style="position: relative;top: 160px; left: 385px;">
+								<div style="position: relative;top: 160px; left: 385px; z-index: 2;">
 									<a onclick="location.href='mainController.do?command=mypage'">
 								    	<img class="avatacon" src="images/avatar.jpg">
 								    	<strong>&nbsp;&nbsp;${dto.userid }</strong>
 							    	</a>
 								</div>
-								<div style="position: relative;top: 125px; left: 690px;">
+								<div style="position: relative;top: 125px; left: 690px; z-index: 2;">
 									<img id="hidemenu" alt="menu" src="images/icon/menu.png" width="30px">
 									<img id="viewmenu" alt="menu" src="images/icon/overmenu.png" width="30px">								
 								</div>
@@ -148,7 +229,7 @@
 											</tr>
 											<tr>
 												<td align="center">
-													<input name="file" type="file" value="사진 선택" style="color: black;" accept=".jpg, .jpeg, .png, .gif, .bmp; images/storyimg/*; capture=camera"/>
+													<input name="file" type="file" value="사진 선택" style="color: black;" accept=".jpg, .jpeg, .png, .gif, .bmp; images/storyimg/*; capture=camera" onchange="previewImage(this,'View_area')"/>
 												</td>
 											</tr>
 											<tr>
@@ -158,9 +239,12 @@
 									</form>
 								</div>
 							</div>
-						    <div id="header">
-						    	<img alt="img" src="images/thumbs/01.jpg"/>
+							<div>
+							    <div id="header" class="image_container">
+							    	<div id="View_area" class="image_containers"></div>
+							    </div>
 						    </div>
+						    <div id="s3"></div><!-- 위쪽 div 와 아래쪽 div를 나누는 용도 -->
 					</section>
 
 				<!-- Footer -->
